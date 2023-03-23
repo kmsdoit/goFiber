@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"goFiber/main/models"
 	"goFiber/main/services/user"
 )
@@ -73,6 +74,28 @@ func LoginUserAPI(c *fiber.Ctx) error {
 	result, err := user.LoginUserService(loginInfo.Email, loginInfo.Password)
 
 	if err != nil || result == "" {
+		return c.Status(400).JSON(&fiber.Map{
+			"success": false,
+			"message": "login request error",
+			"data":    nil,
+		})
+	}
+
+	return c.Status(200).JSON(&fiber.Map{
+		"success": true,
+		"message": "",
+		"data":    result,
+	})
+}
+
+func FindByUserEmailAPI(c *fiber.Ctx) error {
+	userLocals := c.Locals("user").(*jwt.Token)
+	claims := userLocals.Claims.(jwt.MapClaims)
+	email := claims["email"].(string)
+
+	result, isExist, err := user.IsUserExistByEmail(email)
+
+	if err != nil || isExist == false {
 		return c.Status(400).JSON(&fiber.Map{
 			"success": false,
 			"message": "login request error",

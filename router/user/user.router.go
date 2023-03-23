@@ -12,4 +12,5 @@ func SetupUserRoute(app *fiber.App) {
 	api.Get("/user/all", utils.JwtMiddleWare(), user.GetAllUserAPI)
 	api.Post("/user/create", user.CreateUserAPI)
 	api.Post("/user/login", user.LoginUserAPI)
+	api.Get("/user/email", utils.JwtMiddleWare(), user.FindByUserEmailAPI)
 }
