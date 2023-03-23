@@ -14,7 +14,9 @@ require (
 	github.com/go-openapi/spec v0.20.8 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/gofiber/fiber/v2 v2.42.0 // indirect
+	github.com/gofiber/jwt/v3 v3.3.6 // indirect
 	github.com/gofiber/swagger v0.1.9 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
