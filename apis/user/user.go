@@ -109,3 +109,43 @@ func FindByUserEmailAPI(c *fiber.Ctx) error {
 		"data":    result,
 	})
 }
+
+func UpdateUserDataAPI(c *fiber.Ctx) error {
+	updateInfo := new(models.UpdateRequest)
+
+	err := c.BodyParser(updateInfo)
+
+	if err != nil {
+		c.Status(400).JSON(&fiber.Map{
+			"success": "false",
+			"message": err,
+			"data":    nil,
+		})
+		return err
+	}
+
+	if err != nil {
+		c.Status(400).JSON(&fiber.Map{
+			"success": "false",
+			"message": err,
+			"data":    nil,
+		})
+		return err
+	}
+
+	result, err := user.UpdateUserDataService(*updateInfo)
+
+	if err != nil {
+		return c.Status(400).JSON(&fiber.Map{
+			"success": false,
+			"message": "login request error",
+			"data":    nil,
+		})
+	}
+
+	return c.Status(200).JSON(&fiber.Map{
+		"success": true,
+		"message": "",
+		"data":    result,
+	})
+}

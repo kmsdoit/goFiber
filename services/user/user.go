@@ -70,3 +70,21 @@ func GetAllUserService() ([]models.User, error) {
 
 	return Users, nil
 }
+
+func UpdateUserDataService(updateUserData models.UpdateRequest) (string, error) {
+	newPassword, _ := bcrypt.GenerateFromPassword([]byte(updateUserData.Password), bcrypt.DefaultCost)
+
+	var updateUserDataStruct = models.UpdateRequest{
+		Email:    updateUserData.Email,
+		Name:     updateUserData.Name,
+		Password: string(newPassword),
+	}
+
+	result := config.Database.Db.Model(models.User{}).Where("email = ?", updateUserData.Email).Updates(updateUserDataStruct)
+
+	if result.Error != nil {
+		return "", result.Error
+	}
+
+	return "update Complete", nil
+}
