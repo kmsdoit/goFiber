@@ -4,8 +4,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
+	"github.com/joho/godotenv"
 	"goFiber/main/config"
 	"goFiber/main/router"
+	"log"
+	"os"
 )
 
 // @title Fiber Example API
@@ -19,6 +22,11 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	app := fiber.New()
 	app.Use(logger.New())
 
@@ -38,7 +46,7 @@ func main() {
 		OAuth2RedirectUrl: "http://localhost:8080/swagger/oauth2-redirect.html",
 	}))
 
-	config.InitDatabase()
+	config.InitDatabase(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_DATABASE"))
 
 	router.SetupRoutes(app)
 
