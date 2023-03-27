@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
+	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 	"goFiber/main/config"
 	"goFiber/main/router"
@@ -27,7 +28,11 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	app := fiber.New()
+	config.GoogleOauthInit(os.Getenv("GOOGLE_AUTH_ID"), os.Getenv("GOOGLE_AUTH_PW"), os.Getenv("GOOGLE_AUTH_REDIRECT"))
+
+	app := fiber.New(fiber.Config{
+		Views: html.New("./templates", ".html"),
+	})
 	app.Use(logger.New())
 
 	app.Get("/swagger/*", swagger.HandlerDefault) // default
@@ -46,7 +51,7 @@ func main() {
 		OAuth2RedirectUrl: "http://localhost:8080/swagger/oauth2-redirect.html",
 	}))
 
-	config.InitDatabase(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_DATABASE"))
+	config.InitDatabase(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
 
 	router.SetupRoutes(app)
 

@@ -21,7 +21,7 @@ func CreateUserAPI(c *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := user.CreateUserService(newUser.Email, newUser.Name, newUser.Password)
+	result, err := user.CreateUserService(newUser.Email, newUser.Name, newUser.Password, false)
 
 	if err != nil {
 		c.Status(400).JSON(&fiber.Map{
@@ -148,4 +148,37 @@ func UpdateUserDataAPI(c *fiber.Ctx) error {
 		"message": "",
 		"data":    result,
 	})
+}
+
+func GetProfileByUserIdAPI(c *fiber.Ctx) error {
+	userLocals := c.Locals("user").(*jwt.Token)
+	claims := userLocals.Claims.(jwt.MapClaims)
+	email := claims["email"].(string)
+
+	result, isExist, err := user.IsUserExistByEmail(email)
+
+	if err != nil || isExist == false {
+		return c.Status(400).JSON(&fiber.Map{
+			"success": false,
+			"message": "login request error",
+			"data":    nil,
+		})
+	}
+
+	profiles, err := user.GetProfileByUserIdService(result.ID)
+
+	if err != nil {
+		return c.Status(500).JSON(&fiber.Map{
+			"success": false,
+			"message": err,
+			"data":    nil,
+		})
+	}
+
+	return c.Status(200).JSON(&fiber.Map{
+		"success": true,
+		"message": "",
+		"data":    profiles,
+	})
+
 }

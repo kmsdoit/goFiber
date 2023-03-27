@@ -8,14 +8,24 @@ import (
 	"log"
 )
 
-func CreateUserService(email string, name string, password string) (models.User, error) {
-	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+func CreateUserService(email string, name string, password string, oauth bool) (models.User, error) {
 
-	var newUser = models.User{Email: email, Name: name, Password: string(hashPassword)}
+	if oauth == true {
+		var newUser = models.User{Email: email, Name: name, Password: password}
 
-	config.Database.Db.Create(&newUser)
+		config.Database.Db.Create(&newUser)
 
-	return newUser, nil
+		return newUser, nil
+	} else {
+		hashPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+		var newUser = models.User{Email: email, Name: name, Password: string(hashPassword)}
+
+		config.Database.Db.Create(&newUser)
+
+		return newUser, nil
+	}
+
 }
 
 func LoginUserService(email string, password string) (string, error) {
@@ -87,4 +97,13 @@ func UpdateUserDataService(updateUserData models.UpdateRequest) (string, error) 
 	}
 
 	return "update Complete", nil
+}
+
+func GetProfileByUserIdService(userId uint) ([]models.Profile, error) {
+
+	var profiles []models.Profile
+
+	config.Database.Db.Find(&profiles, "user_id = ?", userId)
+
+	return profiles, nil
 }

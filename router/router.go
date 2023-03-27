@@ -3,6 +3,8 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"goFiber/main/router/bookmark"
+	"goFiber/main/router/oauth"
+	"goFiber/main/router/profile"
 	"goFiber/main/router/user"
 )
 
@@ -13,4 +15,6 @@ func SetupRoutes(app *fiber.App) {
 	app.Get("/", status)
 	user.SetupUserRoute(app)
 	bookmark.SetupBookmarkRoutes(app)
+	oauth.SetupOauthRoute(app)
+	profile.SetupUserRoute(app)
 }
