@@ -16,5 +16,5 @@ func SetupRoutes(app *fiber.App) {
 	user.SetupUserRoute(app)
 	bookmark.SetupBookmarkRoutes(app)
 	oauth.SetupOauthRoute(app)
-	profile.SetupUserRoute(app)
+	profile.SetupProfileRoute(app)
 }

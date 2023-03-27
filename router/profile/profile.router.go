@@ -6,7 +6,9 @@ import (
 	"goFiber/main/apis/profile"
 )
 
-func SetupUserRoute(app *fiber.App) {
+func SetupProfileRoute(app *fiber.App) {
 	api := app.Group("/api/v1", logger.New())
 	api.Post("/profile/create", profile.CreateProfileAPI)
+	api.Post("/profile/upload", profile.FileUploadAPI)
+
 }
